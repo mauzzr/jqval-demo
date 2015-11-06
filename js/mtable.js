@@ -1,16 +1,15 @@
 /*
  * File: mtable.js, created by Peter Welby 18 Oct. 2015
- * This script implements the single-page application functionality
- * which reads form input and synchronizes it with the location hash
- * to facilitate back/forward functionality, bookmarking and sharing
- * created tables, etc.
+ * This script implements the multiplication table generation and
+ * form validation logic.
+ * Updated 11/5/2015 to use the jQuery validation plugin
+ * Updated 11/6/2015 to add validation for inputs given directly via the search string,
+ *                      and to add a maxlength validator rule to further prevent massive tables
  */
 
 "use strict";
 
-
-
-/** Generate the table -- to be added as the submit handler for the form */
+/** Function: generateTable(objInput) -- generate the table from parsed search string values */
 var generateTable = function(objInput) {
     var i, j,
         strContent = "",
@@ -22,9 +21,7 @@ var generateTable = function(objInput) {
     cStart = objInput.cStart;
     cEnd = objInput.cEnd;
 
-
     strContent += "<table>";
-
 
     // start at one less than the row and column start values to make a spot for the labels
     for (i = rStart - 1; i <= rEnd; i++) {
@@ -59,6 +56,28 @@ var generateTable = function(objInput) {
     $("#tableArea").html(strContent);
 };
 
+/** Function: checkInputs(objInput) -- check the parsed search string values for invalid inputs
+ *  to prevent circumvention of the form validator */
+var checkInputs = function(objInput) {
+    var errBox = $("#message");
+    // Check for ordering errors
+    if ((objInput.rEnd < objInput.rStart) || (objInput.cEnd) < objInput.cStart) {
+        errBox.html("End values cannot be less than start values! Use the form to enter new values.");
+        return false;
+    // Check for max-value errors
+    } else if ((objInput.rStart > 999) || (objInput.rEnd > 999) || (objInput.cStart > 999) || (objInput.cEnd > 999)) {
+        errBox.html("Values cannot be greater than 999! Use the form to enter new values.");
+        return false;
+    // Check for inputs out of range of one another
+    } else if ((Math.abs(objInput.rEnd - objInput.rStart) > 25) || (Math.abs(objInput.cEnd - objInput.cStart) > 25)) {
+        errBox.html("Values cannot differ by more than 25! Use the form to enter new values.");
+        return false;
+    } else {
+        errBox.html("");
+        return true;
+    }
+};
+
 /** Setup: wait for the document to load, then add the validate listener and run the
  *  search string parsing and table generation logic */
 $(document).ready(function() {
@@ -76,10 +95,10 @@ $(document).ready(function() {
 
     $("#mainForm").validate({
         rules: {
-            rStart: { required: true, digits: true, deltaRange: ["rEnd", 25] },
-            rEnd: { required: true, digits: true, greaterEqual: "rStart", deltaRange: ["rStart", 25] },
-            cStart: { required: true, digits: true, deltaRange:  ["cEnd", 25] },
-            cEnd: { required: true, digits: true, greaterEqual: "cStart", deltaRange: ["cStart", 25] }
+            rStart: { required: true, digits: true, deltaRange: ["rEnd", 25], maxlength: 3 },
+            rEnd: { required: true, digits: true, greaterEqual: "rStart", deltaRange: ["rStart", 25], maxlength: 3 },
+            cStart: { required: true, digits: true, deltaRange:  ["cEnd", 25], maxlength: 3 },
+            cEnd: { required: true, digits: true, greaterEqual: "cStart", deltaRange: ["cStart", 25], maxlength: 3 }
         }
     });
 
@@ -96,12 +115,14 @@ $(document).ready(function() {
             inputObj[inputVals[i][0]] = parseInt(inputVals[i][1]);
         }
 
-        // Get the current values into their respective input fields
-        $("#rStart").val(inputObj.rStart);
-        $("#rEnd").val(inputObj.rEnd);
-        $("#cStart").val(inputObj.cStart);
-        $("#cEnd").val(inputObj.cEnd);
+        // If the search string inputs are valid, get them into the fields and generate a table from them.
+        if (checkInputs(inputObj)) {
+            $("#rStart").val(inputObj.rStart);
+            $("#rEnd").val(inputObj.rEnd);
+            $("#cStart").val(inputObj.cStart);
+            $("#cEnd").val(inputObj.cEnd);
 
-        generateTable(inputObj);
+            generateTable(inputObj);
+        }
     }
 });
