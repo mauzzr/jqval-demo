@@ -62,14 +62,27 @@ var generateTable = function(objInput) {
 /** Setup: wait for the document to load, then add the validate listener and run the
  *  search string parsing and table generation logic */
 $(document).ready(function() {
+    // Add a rule to check for end values being greater than or equal to the start values
+    $.validator.addMethod("greaterEqual", function(value, element, param) {
+        return !value || parseInt(value) >= parseInt($("#" + param).val());
+    }, "The end value cannot be less than the start value.");
+
+    // Add a rule to check for start and end values that are too far apart
+    $.validator.addMethod("deltaRange", function(value, element, params) {
+        var other = $("#" + params[0]),
+            threshold = params[1];
+        return !other.val() || Math.abs(parseInt(value) - parseInt(other.val())) <= threshold;
+    }, "The start and end values cannot differ by more than {1}.");
+
     $("#mainForm").validate({
         rules: {
-            rStart: { required: true, digits: true },
-            rEnd: { required: true, digits: true },
-            cStart: { required: true, digits: true },
-            cEnd: { required: true, digits: true }
+            rStart: { required: true, digits: true, deltaRange: ["rEnd", 25] },
+            rEnd: { required: true, digits: true, greaterEqual: "rStart", deltaRange: ["rStart", 25] },
+            cStart: { required: true, digits: true, deltaRange:  ["cEnd", 25] },
+            cEnd: { required: true, digits: true, greaterEqual: "cStart", deltaRange: ["cStart", 25] }
         }
     });
+
     // If we've got a search string, parse it
     if(location.search) {
         var i, inputVals = [], inputObj = {},
@@ -92,43 +105,3 @@ $(document).ready(function() {
         generateTable(inputObj);
     }
 });
-
-
-
-
-
-
-/** Validation function -- checks to make sure inputs are filled in and ordered correctly,
- *  i.e. "start" is smaller than "end". If all the inputs are valid, they end up in the
- *  inputVals array for the purposes of generating the multiplication table.*/
-/*
-var validate = function() {
-    console.log("I got called!");
-    var i,
-        bFormIsValid = true;
-
-    for (i = 0; i < 4; i++) {
-        // check for blank fields
-        if ($("#in" + (i + 1)).val() == "") {
-            bFormIsValid = false;
-            $("#in" + (i + 1)).css("background-color", "rgba(255, 0, 0, 0.5)");
-            $("#message").text("Please fill out all fields before generating a table.");
-        // check to make sure the Start of the range is not bigger than the End
-        } else if ($("#in" + (i + 1)).attr("class") === "startInput" &&
-                   $("#in" + (i + 2)).val() < $("#in" + (i + 1)).val()) {
-            bFormIsValid = false;
-            console.log(i + 1);
-            console.log(i + 2);
-            $("#in" + (i + 1)).css("background-color", "rgba(255, 0, 0, 0.5)");
-            //$("#in" + (i + 2)).css("background-color", "rgba(255, 0, 0, 0.5)");
-            $("#message").text("Cannot generate table -- Start cannot be greater than End");
-        } else {
-            $("#in" + (i + 1)).css("background-color", "#ffffff");
-        }
-    }
-    if (bFormIsValid) {
-        $("#message").text("");
-    }
-    return bFormIsValid;
-};
-*/
