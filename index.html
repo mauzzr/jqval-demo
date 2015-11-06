@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--
+           Peter Welby
+           UMass Lowell Computer Science Undergraduate - 91.461 GUI Programming I
+           pwelby@cs.uml.edu
+           File: index.html, created 5 Nov. 2015
+           This single-page application works with HTML form input and the jQuery validation plugin
+           to dynamically construct a multiplication table, and was created for the purposes of
+           Assignment 7 in 91.461.
+           See: js/mtable.js
+    -->
+    <title>91.461 Assignment 6</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.14.0/additional-methods.min.js"></script>
+    <script src="js/mtable.js"></script>
+</head>
+<body>
+    <div id="mainContent">
+        <h1>Multiplication Table Generator</h1>
+        <h2>91.461 Assignment 7</h2>
+        <div id="tableArea"></div>
+        <div id="inputArea">
+        <form name="mainForm" id="mainForm" method="GET" action="">
+            <fieldset>
+                <legend>Columns</legend>
+                Start:<br />
+                <input name="cStart" id="cStart" /><label for="cStart" class="error"></label><br />
+                End:<br />
+                <input name="cEnd" id="cEnd" /><label for="cEnd" class="error"></label>
+            </fieldset>
+            <fieldset>
+                <legend>Rows</legend>
+                Start:<br />
+                <input name="rStart" id="rStart" /><label for="rStart" class="error"></label><br />
+                End:<br />
+                <input name="rEnd" id="rEnd" /><label for="rEnd" class="error"></label>
+            </fieldset><br />
+            <button type="submit">Generate</button>
+            <button type="reset">Clear</button>
+        </form>
+        </div>
+        <div id="message"></div>
+    </div>
+</body>
+</html>

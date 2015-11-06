@@ -1,0 +1,102 @@
+/* 91.461 Assignment 6
+ * File: styles.css
+ * Author: Peter Welby, pwelby@cs.uml.edu
+ * Styles to be applied to the page and the dynamically constructed table
+ * See: ../index.html, ../js/mtable.js
+ */
+
+/* Import Open Sans font from Google Fonts for use on this page */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,400italic);
+
+html {
+    background-color: #f1f1f1;
+}
+
+body {
+    margin: 0;
+    background-color: #f1f1f1;
+    font-family: 'Open Sans', sans-serif;
+    color: #161616;
+
+}
+
+h1 {
+    text-align: center;
+    font-size: 3em;
+    font-weight: 700;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2em;
+    font-weight: 700;
+}
+
+/* Table formatting */
+#tableArea {
+    width: 100%;
+    align-content: center;
+    text-align: center;
+}
+
+table {
+    display: inline-table;
+    border: 1px black;
+}
+
+td {
+    border: 1px black;
+    padding: 0.5em;
+}
+
+/* Form formatting */
+#inputArea {
+    text-align: center;
+}
+
+fieldset {
+    padding: 2px 8px 8px 8px;
+    font-weight: 700;
+    text-align: left;
+    display: inline-block;
+    width: 20em;
+}
+
+input {
+    width: 4em;
+}
+
+button {
+    min-width: 8em;
+}
+
+/* Error message formatting */
+#message {
+    color: #ff0000;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Class-based styling for special cells, e.g. */
+/* Multiplier/multiplicand labels, squares */
+
+.indexLabel {
+    background-color: #202020;
+    color: #fafafa;
+}
+
+.squareProduct {
+    background-color: rgba(0, 108, 255, 0.5);
+}
+
+/* Styles for jQuery validation */
+input.error {
+    background-color: rgba(255, 0, 0, 0.4);
+}
+
+label.error {
+    color: red;
+    font-style: italic;
+    font-weight: 400;
+    margin-left: 0.5em;
+}
